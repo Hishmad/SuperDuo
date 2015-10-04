@@ -83,11 +83,14 @@ public class ScoresAdapter extends CursorAdapter {
 
             container.addView(v, 0, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT
                     , ViewGroup.LayoutParams.MATCH_PARENT));
+
             TextView match_day = (TextView) v.findViewById(R.id.matchday_textview);
             match_day.setText(Utilies.getMatchDay(context, cursor.getInt(COL_MATCHDAY),
                     cursor.getInt(COL_LEAGUE)));
+
             TextView league = (TextView) v.findViewById(R.id.league_textview);
             league.setText(Utilies.getLeague(context, cursor.getInt(COL_LEAGUE)));
+
             Button shareButton = (Button) v.findViewById(R.id.share_button);
             shareButton.setContentDescription(context.getString(R.string.content_description_share_button));
             shareButton.setOnClickListener(new View.OnClickListener() {
@@ -104,6 +107,11 @@ public class ScoresAdapter extends CursorAdapter {
         }
     }
 
+    /**
+     * Shre with other app using implicit intent.
+     * @param ShareText
+     * @return
+     */
     public Intent createShareForecastIntent(String ShareText) {
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_WHEN_TASK_RESET);
