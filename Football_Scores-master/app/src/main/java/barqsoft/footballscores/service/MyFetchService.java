@@ -22,7 +22,7 @@ import java.util.Date;
 import java.util.TimeZone;
 import java.util.Vector;
 
-import barqsoft.footballscores.DatabaseContract;
+import barqsoft.footballscores.data.DatabaseContract;
 import barqsoft.footballscores.R;
 
 /**
@@ -30,6 +30,7 @@ import barqsoft.footballscores.R;
  */
 public class MyFetchService extends IntentService {
 
+    // Constant
     public static final String LOG_TAG = "myFetchService";
     private static final int CONVERT = 86400000;
     private static final String PAST_DAYS = "p2";
@@ -37,9 +38,9 @@ public class MyFetchService extends IntentService {
     private static final String SIMPLE_DATE_FORMAT_ONE = "yyyy-MM-ddHH:mm:ss";
     private static final String SIMPLE_DATE_FORMAT_TWO = "yyyy-MM-dd:HH:mm";
     private static final String SIMPLE_DATE_FORMAT_THREE = "yyyy-MM-dd";
-
     public static final String ACTION_DATA_UPDATED = "barqsoft.footballscores.ACTION_DATA_UPDATED";
 
+    // Constructor
     public MyFetchService() {
         super("myFetchService");
     }
@@ -52,6 +53,11 @@ public class MyFetchService extends IntentService {
         return;
     }
 
+    /**
+     * Fetching data
+     *
+     * @param timeFrame
+     */
     private void getData(String timeFrame) {
         //Creating fetch URL
         final String BASE_URL = getString(R.string.base_URL); //Base URL
@@ -63,20 +69,20 @@ public class MyFetchService extends IntentService {
 
         Log.v(LOG_TAG, fetch_build.toString()); //log spam
 
-        HttpURLConnection m_connection = null;
+        HttpURLConnection httpURLConnection = null;
         BufferedReader reader = null;
-        String JSON_data = null;
+        String JsonData = null;
 
         //Opening Connection
         try {
             URL fetch = new URL(fetch_build.toString());
-            m_connection = (HttpURLConnection) fetch.openConnection();
-            m_connection.setRequestMethod("GET");
-            m_connection.addRequestProperty("X-Auth-Token", getString(R.string.api_key));
-            m_connection.connect();
+            httpURLConnection = (HttpURLConnection) fetch.openConnection();
+            httpURLConnection.setRequestMethod("GET");
+            httpURLConnection.addRequestProperty("X-Auth-Token", getString(R.string.api_key));
+            httpURLConnection.connect();
 
             // Read the input stream into a String
-            InputStream inputStream = m_connection.getInputStream();
+            InputStream inputStream = httpURLConnection.getInputStream();
             StringBuffer buffer = new StringBuffer();
             if (inputStream == null) {
                 // Nothing to do.
@@ -97,12 +103,12 @@ public class MyFetchService extends IntentService {
                 // Stream was empty.  No point in parsing.
                 return;
             }
-            JSON_data = buffer.toString();
+            JsonData = buffer.toString();
         } catch (Exception e) {
             //Log.e(LOG_TAG, "Exception here" + e.getMessage());
         } finally {
-            if (m_connection != null) {
-                m_connection.disconnect();
+            if (httpURLConnection != null) {
+                httpURLConnection.disconnect();
             }
             if (reader != null) {
                 try {
@@ -113,9 +119,9 @@ public class MyFetchService extends IntentService {
             }
         }
         try {
-            if (JSON_data != null) {
+            if (JsonData != null) {
                 //This bit is to check if the data contains any matches. If not, we call processJson on the dummy data
-                JSONArray matches = new JSONObject(JSON_data).getJSONArray(getString(R.string.fixture));
+                JSONArray matches = new JSONObject(JsonData).getJSONArray(getString(R.string.fixture));
                 if (matches.length() == 0) {
                     //if there is no data, call the function on dummy data
                     //this is expected behavior during the off season.
@@ -124,7 +130,7 @@ public class MyFetchService extends IntentService {
                     return;
                 }
 
-                processJSONdata(JSON_data, getApplicationContext(), true);
+                processJSONdata(JsonData, getApplicationContext(), true);
             } else {
                 //Could not Connect
                 //Log.d(LOG_TAG, "Could not connect to server.");
@@ -134,6 +140,13 @@ public class MyFetchService extends IntentService {
         }
     }
 
+    /**
+     * JSON parsing
+     *
+     * @param JSONdata
+     * @param mContext
+     * @param isReal
+     */
     private void processJSONdata(String JSONdata, Context mContext, boolean isReal) {
 
         //Log.d(LOG_TAG, "Json: " + JSONdata);
@@ -232,33 +245,29 @@ public class MyFetchService extends IntentService {
                     match_values.put(DatabaseContract.scores_table.LEAGUE_COL, League);
                     match_values.put(DatabaseContract.scores_table.MATCH_DAY, match_day);
 
-                    //log spam
-                    //Log.v(LOG_TAG,match_id);
-                    //Log.v(LOG_TAG,mDate);
-                    //Log.v(LOG_TAG,mTime);
-                    //Log.v(LOG_TAG,Home);
-                    //Log.v(LOG_TAG,Away);
-                    //Log.v(LOG_TAG,Home_goals);
-                    //Log.v(LOG_TAG,Away_goals);
-
                     values.add(match_values);
                 }
             }
-            int inserted_data = 0;
-            ContentValues[] insert_data = new ContentValues[values.size()];
-            values.toArray(insert_data);
-            inserted_data = mContext.getContentResolver().bulkInsert(
-                    DatabaseContract.BASE_CONTENT_URI, insert_data);
 
-            //Log.v(LOG_TAG,"Succesfully Inserted : " + String.valueOf(inserted_data));
+            //int inserted_data = 0;
+            ContentValues[] lInsertData = new ContentValues[values.size()];
+            values.toArray(lInsertData);
+            int lInsertedData = mContext.getContentResolver().bulkInsert(
+                    DatabaseContract.BASE_CONTENT_URI, lInsertData);
 
+
+            // Update the widget
             getWidgets(mContext);
         } catch (JSONException e) {
-            //Log.e(LOG_TAG, e.getMessage());
+            //
         }
 
     }
 
+    /**
+     * Helper method to get the widget with intent to update data
+     * @param context
+     */
     private void getWidgets(Context context) {
         Intent intent = new Intent(ACTION_DATA_UPDATED)
                 .setPackage(context.getPackageName());

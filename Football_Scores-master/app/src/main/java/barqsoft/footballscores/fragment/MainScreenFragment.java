@@ -1,5 +1,6 @@
-package barqsoft.footballscores;
+package barqsoft.footballscores.fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -13,41 +14,50 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 
+import barqsoft.footballscores.R;
+import barqsoft.footballscores.activity.MainActivity;
+import barqsoft.footballscores.data.DatabaseContract;
 import barqsoft.footballscores.service.MyFetchService;
+import barqsoft.footballscores.support.ScoresAdapter;
+import barqsoft.footballscores.support.ViewHolder;
 
 /**
  * A placeholder fragment containing a simple view.
  */
-public class MainScreenFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor>
-{
+public class MainScreenFragment extends Fragment implements LoaderManager.LoaderCallbacks<Cursor> {
+
+    // Constant
     private static final String TAG = MainScreenFragment.class.getSimpleName();
-
-    public ScoresAdapter mAdapter;
     public static final int SCORES_LOADER = 0;
-    private String[] fragmentdate = new String[1];
-    private int last_selected_item = -1;
 
+    // Member variable
+    public ScoresAdapter mAdapter;
+    private String[] fragmentdate = new String[1];
+    private int mLastSelectedItem = -1;
+
+    // Empty constructor
     public MainScreenFragment() { /* no code */ }
 
-    private void updateScores() {
-        getActivity().startService(new Intent(getActivity(), MyFetchService.class));
-    }
-
-    public void setFragmentDate(String date) {
-        fragmentdate[0] = date;
-    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              final Bundle savedInstanceState) {
-        updateScores();
+
+        updateScores(getActivity());
+
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-        final ListView score_list = (ListView) rootView.findViewById(R.id.scores_list);
+
+        final ListView lScoreList = (ListView) rootView.findViewById(R.id.scores_list);
+
         mAdapter = new ScoresAdapter(getActivity(), null, 0);
-        score_list.setAdapter(mAdapter);
+
+        lScoreList.setAdapter(mAdapter);
+
         getLoaderManager().initLoader(SCORES_LOADER, null, this);
+
         mAdapter.detail_match_id = MainActivity.selected_match_id;
-        score_list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+
+        lScoreList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ViewHolder selected = (ViewHolder) view.getTag();
@@ -92,5 +102,23 @@ public class MainScreenFragment extends Fragment implements LoaderManager.Loader
     public void onLoaderReset(Loader<Cursor> cursorLoader) {
         mAdapter.swapCursor(null);
     }
+
+    /**
+     * This method will start a service then fetch the data.
+     * @param context
+     */
+    private void updateScores(Context context) {
+        context.startService(new Intent(getActivity(), MyFetchService.class));
+    }
+
+    /**
+     * A setter for the element 0.
+     * @param date
+     */
+    public void setFragmentDate(String date) {
+
+        fragmentdate[0] = date;
+    }
+
 
 }

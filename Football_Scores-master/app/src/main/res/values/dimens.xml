@@ -9,4 +9,17 @@
     <dimen name="League">15sp</dimen>
     <dimen name="half_margin">8dp</dimen>
     <dimen name="tic_margin">4dp</dimen>
+
+    <dimen name="zero">0dp</dimen>
+    <dimen name="one">1dp</dimen>
+    <dimen name="score_textview_size">20sp</dimen>
+    <dimen name="scores_list_item_linear_layout">5dp</dimen>
+    <dimen name="scores_list_item_elevation">4dp</dimen>
+    <dimen name="pager_header_padding_top">4dp</dimen>
+    <dimen name="pager_header_padding_button">4dp</dimen>
+    <dimen name="fragment_main_divider_height">15sp</dimen>
+    <dimen name="fragment_about_text_size">12sp</dimen>
+    <dimen name="detail_fragment_button_padding">120dp</dimen>
+    <dimen name="detail_fragment_frame_layout_margin">20dp</dimen>
+    <dimen name="detail_fragment_linear_layout_margin">20dp</dimen>
 </resources>

@@ -12,7 +12,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.TaskStackBuilder;
 import android.widget.RemoteViews;
 
-import barqsoft.footballscores.MainActivity;
+import barqsoft.footballscores.activity.MainActivity;
 import barqsoft.footballscores.R;
 import barqsoft.footballscores.service.MyFetchService;
 

@@ -1,4 +1,4 @@
-package barqsoft.footballscores;
+package barqsoft.footballscores.support;
 
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +9,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.TextView;
+
+import barqsoft.footballscores.R;
+import barqsoft.footballscores.support.Utilies;
+import barqsoft.footballscores.support.ViewHolder;
 
 /**
  * Created by yehya khaled on 2/26/2015.
@@ -55,19 +59,19 @@ public class ScoresAdapter extends CursorAdapter {
 
         final ViewHolder mHolder = (ViewHolder) view.getTag();
 
-        mHolder.home_name.setText(cursor.getString(COL_HOME));
-        mHolder.away_name.setText(cursor.getString(COL_AWAY));
+        mHolder.homeName.setText(cursor.getString(COL_HOME));
+        mHolder.awayName.setText(cursor.getString(COL_AWAY));
         mHolder.date.setText(cursor.getString(COL_MATCHTIME));
         mHolder.score.setText(Utilies.getScores(cursor.getInt(COL_HOME_GOALS), cursor.getInt(COL_AWAY_GOALS)));
         mHolder.match_id = cursor.getDouble(COL_ID);
-        mHolder.home_crest.setImageResource(Utilies.getTeamCrestByTeamName(
+        mHolder.homeCrest.setImageResource(Utilies.getTeamCrestByTeamName(
                 cursor.getString(COL_HOME)));
-        mHolder.home_crest.setContentDescription(context.getString(R.string.home_crest) + cursor.getString(COL_HOME));
-        mHolder.away_crest.setImageResource(Utilies.getTeamCrestByTeamName(
+        mHolder.homeCrest.setContentDescription(context.getString(R.string.home_crest) + cursor.getString(COL_HOME));
+        mHolder.awayCrest.setImageResource(Utilies.getTeamCrestByTeamName(
                 cursor.getString(COL_AWAY)
         ));
-        mHolder.home_crest.setContentDescription(context.getString(R.string.away_crest) + cursor.getString(COL_AWAY));
-        //Log.v(FetchScoreTask.LOG_TAG,mHolder.home_name.getText() + " Vs. " + mHolder.away_name.getText() +" id " + String.valueOf(mHolder.match_id));
+        mHolder.homeCrest.setContentDescription(context.getString(R.string.away_crest) + cursor.getString(COL_AWAY));
+        //Log.v(FetchScoreTask.LOG_TAG,mHolder.homeName.getText() + " Vs. " + mHolder.awayName.getText() +" id " + String.valueOf(mHolder.match_id));
         //Log.v(FetchScoreTask.LOG_TAG,String.valueOf(detail_match_id));
         LayoutInflater vi = (LayoutInflater) context.getApplicationContext()
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -84,13 +88,14 @@ public class ScoresAdapter extends CursorAdapter {
                     cursor.getInt(COL_LEAGUE)));
             TextView league = (TextView) v.findViewById(R.id.league_textview);
             league.setText(Utilies.getLeague(context, cursor.getInt(COL_LEAGUE)));
-            Button share_button = (Button) v.findViewById(R.id.share_button);
-            share_button.setOnClickListener(new View.OnClickListener() {
+            Button shareButton = (Button) v.findViewById(R.id.share_button);
+            shareButton.setContentDescription(context.getString(R.string.content_description_share_button));
+            shareButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //add Share Action
-                    context.startActivity(createShareForecastIntent(mHolder.home_name.getText() + " "
-                            + mHolder.score.getText() + " " + mHolder.away_name.getText() + " "));
+                    context.startActivity(createShareForecastIntent(mHolder.homeName.getText() + " "
+                            + mHolder.score.getText() + " " + mHolder.awayName.getText() + " "));
                 }
             });
         }

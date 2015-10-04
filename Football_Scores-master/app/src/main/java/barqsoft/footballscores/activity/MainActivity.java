@@ -1,39 +1,48 @@
-package barqsoft.footballscores;
+package barqsoft.footballscores.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import barqsoft.footballscores.fragment.PagerFragment;
+import barqsoft.footballscores.R;
+
 public class MainActivity extends ActionBarActivity {
 
+    // Constant
+    private static final String KEY_PAGER_CURRENT = "pagerCurrent";
+    private static final String KEY_SELECTED_MATCH = "selectedMatch";
+    private static final String KEY_FRAGMENT = "pagerFragment";
+
+    // Static global variables
     public static int selected_match_id;
     public static int current_fragment = 2;
 
-    private static final String KEY_PAGER_CURRENT = "Pager_Current";
-    private static final String KEY_SELECTED_MATCH = "Selected_match";
-    private static final String KEY_FRAGMENT = "my_main";
-
-
-    private PagerFragment my_main;
+    // Member variable
+    private PagerFragment mPagerFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-
+        // Get the fragment dynamically.
         if (savedInstanceState == null) {
-            my_main = new PagerFragment();
+            mPagerFragment = new PagerFragment();
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.container, my_main)
+                    .add(R.id.container, mPagerFragment)
                     .commit();
         }
     }
 
 
+    /**
+     * Inflate the option menu into the action bar
+     * @param menu
+     * @return
+     */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
@@ -41,6 +50,11 @@ public class MainActivity extends ActionBarActivity {
         return true;
     }
 
+    /**
+     * When user select an item in the menu
+     * @param item
+     * @return
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle action bar item clicks here. The action bar will
@@ -48,10 +62,9 @@ public class MainActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
+        // This will go to the AboutActivity.class
         if (id == R.id.action_about) {
-            Intent start_about = new Intent(this, AboutActivity.class);
-            startActivity(start_about);
+            startActivity(new Intent(this, AboutActivity.class));
             return true;
         }
 
@@ -60,25 +73,19 @@ public class MainActivity extends ActionBarActivity {
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
-        //Log.v(save_tag, "will save");
-        //Log.v(save_tag, "fragment: " + String.valueOf(my_main.mPagerHandler.getCurrentItem()));
-        //Log.v(save_tag, "selected id: " + selected_match_id);
 
-        outState.putInt(KEY_PAGER_CURRENT, my_main.mPagerHandler.getCurrentItem());
+        outState.putInt(KEY_PAGER_CURRENT, mPagerFragment.mPagerHandler.getCurrentItem());
         outState.putInt(KEY_SELECTED_MATCH, selected_match_id);
-        getSupportFragmentManager().putFragment(outState, KEY_FRAGMENT, my_main);
+        getSupportFragmentManager().putFragment(outState, KEY_FRAGMENT, mPagerFragment);
         super.onSaveInstanceState(outState);
     }
 
     @Override
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
-        //Log.v(save_tag, "will retrive");
-        //Log.v(save_tag, "fragment: " + String.valueOf(savedInstanceState.getInt("Pager_Current")));
-        //Log.v(save_tag, "selected id: " + savedInstanceState.getInt("Selected_match"));
 
         current_fragment = savedInstanceState.getInt(KEY_PAGER_CURRENT);
         selected_match_id = savedInstanceState.getInt(KEY_SELECTED_MATCH);
-        my_main = (PagerFragment) getSupportFragmentManager().getFragment(savedInstanceState, KEY_FRAGMENT);
+        mPagerFragment = (PagerFragment) getSupportFragmentManager().getFragment(savedInstanceState, KEY_FRAGMENT);
         super.onRestoreInstanceState(savedInstanceState);
     }
 }

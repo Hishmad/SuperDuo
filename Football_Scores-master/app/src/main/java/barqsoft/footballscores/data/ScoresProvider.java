@@ -1,4 +1,4 @@
-package barqsoft.footballscores;
+package barqsoft.footballscores.data;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -8,19 +8,21 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 
+import barqsoft.footballscores.R;
+import barqsoft.footballscores.data.DatabaseContract;
+import barqsoft.footballscores.data.ScoresDBHelper;
+
 /**
  * Created by yehya khaled on 2/25/2015.
  */
 public class ScoresProvider extends ContentProvider {
 
-    private static ScoresDBHelper mOpenHelper;
 
+    // Constant
     private static final int MATCHES = 100;
     private static final int MATCHES_WITH_LEAGUE = 101;
     private static final int MATCHES_WITH_ID = 102;
     private static final int MATCHES_WITH_DATE = 103;
-
-    private UriMatcher muriMatcher = buildUriMatcher();
 
     private static final SQLiteQueryBuilder ScoreQuery =
             new SQLiteQueryBuilder();
@@ -38,9 +40,15 @@ public class ScoresProvider extends ContentProvider {
     private static final String MATCHER_THREE = "date";
     private static final String ID_TAG = "_id";
 
+    // Memeber variable
+    private static ScoresDBHelper mOpenHelper;
+    private UriMatcher muriMatcher = buildUriMatcher(); // Encapsulate
 
 
-
+    /**
+     * Static Method
+     * @return UriMatcher
+     */
     static UriMatcher buildUriMatcher() {
         final UriMatcher matcher = new UriMatcher(UriMatcher.NO_MATCH);
         final String authority = DatabaseContract.BASE_CONTENT_URI.toString();
@@ -51,6 +59,11 @@ public class ScoresProvider extends ContentProvider {
         return matcher;
     }
 
+    /**
+     *
+     * @param uri
+     * @return -1 if no match
+     */
     private int match_uri(Uri uri) {
         String link = uri.toString();
         {
@@ -95,14 +108,21 @@ public class ScoresProvider extends ContentProvider {
         }
     }
 
+    /**
+     * To query from the database
+     * @param uri
+     * @param projection
+     * @param selection
+     * @param selectionArgs
+     * @param sortOrder
+     * @return
+     */
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         Cursor retCursor;
-        //Log.v(FetchScoreTask.LOG_TAG,uri.getPathSegments().toString());
+
         int match = match_uri(uri);
-        //Log.v(FetchScoreTask.LOG_TAG,SCORES_BY_LEAGUE);
-        //Log.v(FetchScoreTask.LOG_TAG,selectionArgs[0]);
-        //Log.v(FetchScoreTask.LOG_TAG,String.valueOf(match));
+
         switch (match) {
             case MATCHES:
                 retCursor = mOpenHelper.getReadableDatabase().query(
@@ -110,8 +130,6 @@ public class ScoresProvider extends ContentProvider {
                         projection, null, null, null, null, sortOrder);
                 break;
             case MATCHES_WITH_DATE:
-                //Log.v(FetchScoreTask.LOG_TAG,selectionArgs[1]);
-                //Log.v(FetchScoreTask.LOG_TAG,selectionArgs[2]);
                 retCursor = mOpenHelper.getReadableDatabase().query(
                         DatabaseContract.SCORES_TABLE,
                         projection, SCORES_BY_DATE, selectionArgs, null, null, sortOrder);
@@ -133,17 +151,27 @@ public class ScoresProvider extends ContentProvider {
         return retCursor;
     }
 
+    /**
+     * To add into the database
+     * @param uri
+     * @param values
+     * @return
+     */
     @Override
     public Uri insert(Uri uri, ContentValues values) {
 
         return null;
     }
 
+    /**
+     * To add more the one record at once
+     * @param uri
+     * @param values
+     * @return
+     */
     @Override
     public int bulkInsert(Uri uri, ContentValues[] values) {
         SQLiteDatabase db = mOpenHelper.getWritableDatabase();
-        //db.delete(DatabaseContract.SCORES_TABLE,null,null);
-        //Log.v(FetchScoreTask.LOG_TAG,String.valueOf(muriMatcher.match(uri)));
         switch (match_uri(uri)) {
             case MATCHES:
                 db.beginTransaction();
@@ -167,6 +195,13 @@ public class ScoresProvider extends ContentProvider {
         }
     }
 
+    /**
+     * To delete a row from the database
+     * @param uri
+     * @param selection
+     * @param selectionArgs
+     * @return
+     */
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         return 0;

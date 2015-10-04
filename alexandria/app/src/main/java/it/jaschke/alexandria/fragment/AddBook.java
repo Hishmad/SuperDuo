@@ -188,7 +188,7 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
             case (LOADER_ID): {
                 if (resultCode == Activity.RESULT_OK) {
                     String lScanContents = data.getStringExtra(SCAN_CONTENTS);
-                    String lScanFormat = data.getStringExtra(SCAN_FORMAT);
+                    //String lScanFormat = data.getStringExtra(SCAN_FORMAT); no need
                     mEanTextView.setText(lScanContents);
                 }
                 break;
@@ -228,13 +228,17 @@ public class AddBook extends Fragment implements LoaderManager.LoaderCallbacks<C
         ((TextView) mRootView.findViewById(R.id.bookSubTitle)).setText(bookSubTitle);
 
         String authors = data.getString(data.getColumnIndex(AlexandriaContract.AuthorEntry.AUTHOR));
-        String[] authorsArr = authors.split(SPLIT_SIGN);
-        ((TextView) mRootView.findViewById(R.id.authors)).setLines(authorsArr.length);
-        ((TextView) mRootView.findViewById(R.id.authors)).setText(authors.replace(SPLIT_SIGN, LINE_FEED_SIGN));
+
+        // Avoid crash
+        if (authors != null) {
+            String[] authorsArr = authors.split(SPLIT_SIGN);
+            ((TextView) mRootView.findViewById(R.id.authors)).setLines(authorsArr.length);
+            ((TextView) mRootView.findViewById(R.id.authors)).setText(authors.replace(SPLIT_SIGN, LINE_FEED_SIGN));
+        }
 
         ImageView bookCover = (ImageView) mRootView.findViewById(R.id.bookCover);
         String imgUrl = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.IMAGE_URL));
-        if (imgUrl != null && imgUrl.length() >0) {
+        if (imgUrl != null && imgUrl.length() > 0) {
             if (Patterns.WEB_URL.matcher(imgUrl).matches()) {
                 // Replaced image loader with Glide and add getActivity to prevent crash.
                 if (getActivity() != null && !getActivity().isFinishing()) {

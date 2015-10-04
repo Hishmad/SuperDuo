@@ -14,9 +14,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-import barqsoft.footballscores.DatabaseContract;
+import barqsoft.footballscores.data.DatabaseContract;
 import barqsoft.footballscores.R;
-import barqsoft.footballscores.Utilies;
+import barqsoft.footballscores.support.Utilies;
 
 /**
  * Created by hishmadabubakaralamudi on 10/1/15.

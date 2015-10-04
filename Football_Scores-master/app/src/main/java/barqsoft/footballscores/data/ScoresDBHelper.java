@@ -1,18 +1,22 @@
-package barqsoft.footballscores;
+package barqsoft.footballscores.data;
 
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
-import barqsoft.footballscores.DatabaseContract.scores_table;
+import barqsoft.footballscores.data.DatabaseContract;
+import barqsoft.footballscores.data.DatabaseContract.scores_table;
 
 /**
  * Created by yehya khaled on 2/25/2015.
  */
 public class ScoresDBHelper extends SQLiteOpenHelper {
-    public static final String DATABASE_NAME = "Scores.db";
-    private static final int DATABASE_VERSION = 2;
 
+    // Constant
+    private static final int DATABASE_VERSION = 2;
+    public static final String DATABASE_NAME = "Scores.db";
+
+    // Constructor
     public ScoresDBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }

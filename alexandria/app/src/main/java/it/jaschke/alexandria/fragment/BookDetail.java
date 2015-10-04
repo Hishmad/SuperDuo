@@ -107,8 +107,12 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
         Intent shareIntent = new Intent(Intent.ACTION_SEND);
         shareIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT);
         shareIntent.setType(getActivity().getString(R.string.share_intent_book_detail));
-        shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_text) + mBookTitle);
-        mShareActionProvider.setShareIntent(shareIntent);
+        shareIntent.putExtra(Intent.EXTRA_TEXT, getString(R.string.share_text) + mBookTitle + " ISBN: " + mEan);
+
+        // Avoid crash check before invoke setShareIntent()
+        if (mShareActionProvider != null) {
+            mShareActionProvider.setShareIntent(shareIntent);
+        }
     }
 
     @Override
@@ -154,10 +158,13 @@ public class BookDetail extends Fragment implements LoaderManager.LoaderCallback
         ((TextView) mRootView.findViewById(R.id.fullBookDesc)).setText(desc);
 
         String authors = data.getString(data.getColumnIndex(AlexandriaContract.AuthorEntry.AUTHOR));
-        String[] authorsArr = authors.split(",");
 
-        ((TextView) mRootView.findViewById(R.id.authors)).setLines(authorsArr.length);
-        ((TextView) mRootView.findViewById(R.id.authors)).setText(authors.replace(",","\n"));
+        if ( authors != null  ) {
+            String[] authorsArr = authors.split(",");
+
+            ((TextView) mRootView.findViewById(R.id.authors)).setLines(authorsArr.length);
+            ((TextView) mRootView.findViewById(R.id.authors)).setText(authors.replace(",", "\n"));
+        }
 
         // Get the Image URL from the database table
         String imgUrl = data.getString(data.getColumnIndex(AlexandriaContract.BookEntry.IMAGE_URL));

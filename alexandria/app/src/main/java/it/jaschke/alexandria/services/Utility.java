@@ -9,6 +9,7 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
+import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,7 +46,6 @@ public class Utility {
         NetworkInfo activeNetwork = cm.getActiveNetworkInfo();
         return activeNetwork != null &&
                 activeNetwork.isConnectedOrConnecting();
-
 
     }
 
@@ -284,20 +284,23 @@ public class Utility {
                     imgUrl = context.getString(R.string.not_available_any_message);
                 }
 
-                Utility.writeBackBook(ean, title, subtitle, desc, imgUrl, context);
+                writeBackBook(ean, title, subtitle, desc, imgUrl, context);
 
                 if (bookInfo.has(AUTHORS)) {
-                    Utility.writeBackAuthors(ean, bookInfo.getJSONArray(AUTHORS), context);
+                    writeBackAuthors(ean, bookInfo.getJSONArray(AUTHORS), context);
                 }
 
 
                 if (bookInfo.has(CATEGORIES)) {
-                    Utility.writeBackCategory(ean, bookInfo.getJSONArray(CATEGORIES), context);
+                    writeBackCategory(ean, bookInfo.getJSONArray(CATEGORIES), context);
                 }
 
             } catch (JSONException e) {
                 Log.e(LOG_TAG, context.getString(R.string.error_tag), e);
             }
+        } else {
+            // Notify the user when there is no network connection with a toast.
+            Toast.makeText(context, R.string.no_network_connection, Toast.LENGTH_SHORT).show();
         }
     }
 

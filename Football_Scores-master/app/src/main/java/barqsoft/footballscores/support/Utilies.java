@@ -1,9 +1,11 @@
-package barqsoft.footballscores;
+package barqsoft.footballscores.support;
 
 import android.content.Context;
 import android.text.format.Time;
 
 import java.text.SimpleDateFormat;
+
+import barqsoft.footballscores.R;
 
 /**
  * Created by yehya khaled on 3/3/2015.
@@ -146,4 +148,6 @@ public class Utilies {
             return dayFormat.format(dateInMillis);
         }
     }
+
+
 }
