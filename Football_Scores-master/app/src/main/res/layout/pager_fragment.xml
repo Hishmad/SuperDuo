@@ -7,13 +7,15 @@
     <android.support.v4.view.ViewPager xmlns:android="http://schemas.android.com/apk/res/android"
         android:id="@+id/pager"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:contentDescription="@string/pager_view">
 
         <android.support.v4.view.PagerTabStrip
             android:id="@+id/pager_header"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="top"
+            android:contentDescription="@string/pager_header"
             android:paddingBottom="@dimen/pager_header_padding_button"
             android:paddingTop="@dimen/pager_header_padding_top" />
         >

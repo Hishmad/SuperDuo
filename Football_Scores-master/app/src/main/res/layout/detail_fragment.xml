@@ -49,6 +49,7 @@
             android:paddingRight="@dimen/detail_fragment_button_padding"
             android:paddingStart="@dimen/detail_fragment_button_padding"
             android:text="@string/share_text"
+            android:contentDescription="@string/content_description_share_button"
             tools:targetApi="11" />
     </FrameLayout>
 

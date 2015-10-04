@@ -79,4 +79,6 @@
     <string name="any_team_name" translatable="false">Victória</string>
     <string name="today_widget_text_view">Today</string>
     <string name="bahia">Bahia</string>
+    <string name="pager_header">pager header</string>
+    <string name="pager_view">pager view</string>
 </resources>

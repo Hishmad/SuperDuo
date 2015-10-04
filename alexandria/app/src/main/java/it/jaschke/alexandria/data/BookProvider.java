@@ -233,12 +233,14 @@ public class BookProvider extends ContentProvider {
         switch (match) {
             case BOOK: {
                 long _id = db.insert(AlexandriaContract.BookEntry.TABLE_NAME, null, values);
+
                 if ( _id > 0 ){
                     returnUri = AlexandriaContract.BookEntry.buildBookUri(_id);
                 } else {
                     throw new android.database.SQLException(
                             getContext().getString(R.string.error_faild_to_insert_row) + uri);
                 }
+
                 getContext().getContentResolver().notifyChange(AlexandriaContract.BookEntry.buildFullBookUri(_id), null);
                 break;
             }
