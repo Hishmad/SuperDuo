@@ -72,6 +72,8 @@ public class Utility {
         values.put(AlexandriaContract.BookEntry.SUBTITLE, subtitle);
         values.put(AlexandriaContract.BookEntry.DESC, desc);
         context.getContentResolver().insert(AlexandriaContract.BookEntry.CONTENT_URI, values);
+
+
     }
 
     /**

@@ -21,6 +21,9 @@ public class AlexandriaContract{
 
     public static final String PATH_FULLBOOK = "fullbook";
 
+
+
+
     public static final class BookEntry implements BaseColumns {
 
         public static final Uri CONTENT_URI = BASE_CONTENT_URI.buildUpon().appendPath(PATH_BOOKS).build();

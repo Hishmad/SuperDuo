@@ -42,11 +42,6 @@ public class DbHelper extends SQLiteOpenHelper {
                 " FOREIGN KEY (" + AlexandriaContract.CategoryEntry._ID + ") REFERENCES " +
                 AlexandriaContract.BookEntry.TABLE_NAME + " (" + AlexandriaContract.BookEntry._ID + "))";
 
-
-        Log.d(LOG_TAG, SQL_CREATE_BOOK_TABLE);
-        Log.d(LOG_TAG, SQL_CREATE_AUTHOR_TABLE);
-        Log.d(LOG_TAG, SQL_CREATE_CATEGORY_TABLE);
-
         db.execSQL(SQL_CREATE_BOOK_TABLE);
         db.execSQL(SQL_CREATE_AUTHOR_TABLE);
         db.execSQL(SQL_CREATE_CATEGORY_TABLE);
@@ -56,5 +51,11 @@ public class DbHelper extends SQLiteOpenHelper {
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
 
+        // upgrade
+        db.execSQL("DROP TABLE IF EXISTS " + AlexandriaContract.CategoryEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + AlexandriaContract.AuthorEntry.TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + AlexandriaContract.BookEntry.TABLE_NAME);
+
+        onCreate(db);
     }
 }

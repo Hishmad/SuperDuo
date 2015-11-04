@@ -77,6 +77,13 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
         // Initializing the EditText
         mSearchText = (EditText) rootView.findViewById(R.id.searchText);
 
+
+        // Initializing the list view.
+        mBookList = (ListView) rootView.findViewById(R.id.listOfBooks);
+
+        // set the adapter
+        mBookList.setAdapter(mBookListAdapter);
+
         // Initialing the search button then set the click listener
         rootView.findViewById(R.id.searchButton).setOnClickListener(
                 new View.OnClickListener() {
@@ -87,12 +94,6 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
                     }
                 }
         );
-
-        // Initializing the list view.
-        mBookList = (ListView) rootView.findViewById(R.id.listOfBooks);
-
-        // set the adapter
-        mBookList.setAdapter(mBookListAdapter);
 
         // set the item click
         mBookList.setOnItemClickListener(new AdapterView.OnItemClickListener() {
@@ -183,8 +184,7 @@ public class ListOfBooks extends Fragment implements LoaderManager.LoaderCallbac
                 null,
                 null,
                 null,
-                null
-        );
+                null);
     }
 
     @Override

@@ -193,6 +193,7 @@ public class ScoresProvider extends ContentProvider {
             default:
                 return super.bulkInsert(uri, values);
         }
+
     }
 
     /**

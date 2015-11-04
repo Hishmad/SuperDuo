@@ -18,7 +18,9 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 import java.util.Vector;
 
@@ -187,12 +189,14 @@ public class MyFetchService extends IntentService {
             JSONArray matches = new JSONObject(JSONdata).getJSONArray(FIXTURES);
 
             //ContentValues to be inserted
-            Vector<ContentValues> values = new Vector<>(matches.length());
+            List<ContentValues> values = new ArrayList<>(matches.length());
+
             for (int i = 0; i < matches.length(); i++) {
                 JSONObject match_data = matches.getJSONObject(i);
                 League = match_data.getJSONObject(LINKS).getJSONObject(SOCCER_SEASON).
                         getString(getString(R.string.href));
                 League = League.replace(SEASON_LINK, "");
+
                 if (isReal || League.equals(PREMIER_LEGAUE) ||
                         League.equals(SERIE_A) ||
                         League.equals(CHAMPIONS_LEAGUE) ||
@@ -234,6 +238,7 @@ public class MyFetchService extends IntentService {
                     Home_goals = match_data.getJSONObject(RESULT).getString(HOME_GOALS);
                     Away_goals = match_data.getJSONObject(RESULT).getString(AWAY_GOALS);
                     match_day = match_data.getString(MATCH_DAY);
+
                     ContentValues match_values = new ContentValues();
                     match_values.put(DatabaseContract.scores_table.MATCH_ID, match_id);
                     match_values.put(DatabaseContract.scores_table.DATE_COL, mDate);

@@ -39,7 +39,8 @@ public class BookProvider extends ContentProvider {
         bookFull.setTables(
                 AlexandriaContract.BookEntry.TABLE_NAME + " LEFT OUTER JOIN " +
                 AlexandriaContract.AuthorEntry.TABLE_NAME + " USING (" +AlexandriaContract.BookEntry._ID + ")" +
-                " LEFT OUTER JOIN " +  AlexandriaContract.CategoryEntry.TABLE_NAME + " USING (" +AlexandriaContract.BookEntry._ID + ")");
+                " LEFT OUTER JOIN " +  AlexandriaContract.CategoryEntry.TABLE_NAME +
+                        " USING (" +AlexandriaContract.BookEntry._ID + ")");
     }
 
 
@@ -74,7 +75,6 @@ public class BookProvider extends ContentProvider {
         Cursor retCursor;
         switch (uriMatcher.match(uri)) {
             case BOOK:
-
                 retCursor = dbHelper.getReadableDatabase().query(
                         AlexandriaContract.BookEntry.TABLE_NAME,
                         projection,
@@ -85,8 +85,8 @@ public class BookProvider extends ContentProvider {
                         sortOrder
                 );
                 break;
-            case AUTHOR:
 
+            case AUTHOR:
                 retCursor=dbHelper.getReadableDatabase().query(
                         AlexandriaContract.AuthorEntry.TABLE_NAME,
                         projection,
@@ -97,8 +97,8 @@ public class BookProvider extends ContentProvider {
                         sortOrder
                 );
                 break;
-            case CATEGORY:
 
+            case CATEGORY:
                 retCursor=dbHelper.getReadableDatabase().query(
                         AlexandriaContract.CategoryEntry.TABLE_NAME,
                         projection,
@@ -109,8 +109,8 @@ public class BookProvider extends ContentProvider {
                         sortOrder
                 );
                 break;
-            case BOOK_ID:
 
+            case BOOK_ID:
                 retCursor=dbHelper.getReadableDatabase().query(
                         AlexandriaContract.BookEntry.TABLE_NAME,
                         projection,
@@ -121,8 +121,8 @@ public class BookProvider extends ContentProvider {
                         sortOrder
                 );
                 break;
-            case AUTHOR_ID:
 
+            case AUTHOR_ID:
                 retCursor=dbHelper.getReadableDatabase().query(
                         AlexandriaContract.AuthorEntry.TABLE_NAME,
                         projection,
@@ -182,6 +182,7 @@ public class BookProvider extends ContentProvider {
                         "group_concat(DISTINCT " + AlexandriaContract.AuthorEntry.TABLE_NAME+ "."+ AlexandriaContract.AuthorEntry.AUTHOR + ") as " + AlexandriaContract.AuthorEntry.AUTHOR,
                         "group_concat(DISTINCT " + AlexandriaContract.CategoryEntry.TABLE_NAME+ "."+ AlexandriaContract.CategoryEntry.CATEGORY +") as " + AlexandriaContract.CategoryEntry.CATEGORY
                 };
+
                 retCursor = bookFull.query(dbHelper.getReadableDatabase(),
                         bf_projection,
                         null,
@@ -296,6 +297,7 @@ public class BookProvider extends ContentProvider {
                 throw new UnsupportedOperationException(
                         getContext().getString(R.string.error_unknown_uri) + uri);
         }
+
         // Because a null deletes all rows
         if (selection == null || rowsDeleted != 0) {
             getContext().getContentResolver().notifyChange(uri, null);
